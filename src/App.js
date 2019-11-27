@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from "react";
 import ContactList from "./ContactList";
 import AppHeader from "./AppHeader";
+import { connect } from "react-redux";
+import { contactsFetched } from "./redux/actions/index";
 
-function App() {
-	const [contacts, setContacts] = useState(null);
-
+function App({ contacts, contactsFetched }) {
 	useEffect(() => {
 		fetch("https://randomuser.me/api/?format=json&results=10")
 			.then((res) => res.json())
-			.then((json) => setContacts(json.results));
+			.then((json) => contactsFetched(json.results));
 	}, []);
 
-	console.log(contacts);
 	return (
 		<div className='App'>
 			<AppHeader />
@@ -22,4 +21,12 @@ function App() {
 	);
 }
 
-export default App;
+const mapState = (state) => {
+	console.log(state);
+	return {
+		contacts: state.contacts
+	};
+};
+
+const mapDispatch = { contactsFetched };
+export default connect(mapState, mapDispatch)(App);
