@@ -1,26 +1,25 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import ContactList from "./ContactList";
+import AppHeader from "./AppHeader";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+	const [contacts, setContacts] = useState(null);
+
+	useEffect(() => {
+		fetch("https://randomuser.me/api/?format=json&results=10")
+			.then((res) => res.json())
+			.then((json) => setContacts(json.results));
+	}, []);
+
+	console.log(contacts);
+	return (
+		<div className='App'>
+			<AppHeader />
+			<main>
+				{contacts ? <ContactList contacts={contacts} /> : "Ładowanie"}
+			</main>
+		</div>
+	);
 }
 
 export default App;
